@@ -18,7 +18,6 @@ if ($handle) // Si el archivo existe.
     $command = []; // Creo el array $command que contendrá los comandos de Pseint(Escribir, Leer, Segun, etc.).
     $data = []; // Creo el array $data que contendrá los datos, después de los comandos de Pseint(Nombres de Variables, Texto a Mostrar, Operaciones, etc.).
     $counter = 0; // Creo $counter para contar la cantidad de comandos de Pseint.
-    $j = 0;
     while (($line = fgets($handle)) !== false) // Mientras Lea Líneas del Archivo.
     {
         $data[$counter] = []; // Hago a $data un array bidimensional.
@@ -31,7 +30,7 @@ if ($handle) // Si el archivo existe.
         }
         else // Si no es Escribir
         {
-            $data[$counter] = explode(" ", $line); // Exploto la misma linea por el espacio( ).
+            $data[$counter] = explode(" ", $line); // Exploto la misma linea por el espacio( ) en el array $data.
             if (count($data[$counter]) == 2) // Si el tamaño de $data[$counter] es 2 me encontré con Leer.
             {
                 $data[$counter][1] = trim($data[$counter][1], ";\r\n"); // Entonces hago un trim al contenido de $data[$counter][1] que es el nombre de la variable a ingresar.
