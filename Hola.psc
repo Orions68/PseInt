@@ -1,5 +1,5 @@
-Algoritmo Hola
-	Escribir "Ingresa el Primer Número; " Sin Saltar;
+Algoritmo Calculadora
+	Escribir "Ingresa el Primer Número: " Sin Saltar;
 	Leer num1;
 	Escribir "Ingresa el Segundo Número: " Sin Saltar;
 	Leer num2;

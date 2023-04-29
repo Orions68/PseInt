@@ -18,93 +18,87 @@ if ($handle) // Si el archivo existe.
     $command = []; // Creo el array $command que contendrá los comandos de Pseint(Escribir, Leer, Segun, etc.).
     $data = []; // Creo el array $data que contendrá los datos, después de los comandos de Pseint(Nombres de Variables, Texto a Mostrar, Operaciones, etc.).
     $counter = 0; // Creo $counter para contar la cantidad de comandos de Pseint.
+    $j = 0;
     while (($line = fgets($handle)) !== false) // Mientras Lea Líneas del Archivo.
     {
-        $command[$counter] = []; // Hago a $command un array bidimensional.
         $data[$counter] = []; // Hago a $data un array bidimensional.
-        $command[$counter] = explode(" ", $line);
-        $command[$counter][0] =  trim($command[$counter][0], "\t");
-        if ($command[$counter][0] == "Escribir")
+        $command[$counter] = strtok($line, " "); // Obtengo la primera palabra antes del espacio( ) en el array $command[$counter] de la primera línea que leo del archivo de Pseint.
+        $command[$counter] =  trim($command[$counter], "\t"); // Hago un trim de las tabulaciones.
+
+        if ($command[$counter] == "Escribir") // Verifico si el comando es Escribir.
         {
-            $data[$counter] = explode('"', $line);
+            $data[$counter] = explode('"', $line); // Si es así esploto en el array data[$counter] la misma linea separando la cadena por las comillas(") y obtengo el texto a mostrar en patalla.
         }
-        else
+        else // Si no es Escribir
         {
-            $data[$counter] = explode(" ", $line);
-            if (count($data[$counter]) > 1)
+            $data[$counter] = explode(" ", $line); // Exploto la misma linea por el espacio( ).
+            if (count($data[$counter]) == 2) // Si el tamaño de $data[$counter] es 2 me encontré con Leer.
             {
-                $data[$counter][1] = trim($data[$counter][1], ";\r\n");
+                $data[$counter][1] = trim($data[$counter][1], ";\r\n"); // Entonces hago un trim al contenido de $data[$counter][1] que es el nombre de la variable a ingresar.
             }
-            if (count($data[$counter]) > 2)
+            if (count($data[$counter]) == 3) // Si el tamaño de $data[$counter] es 3, me encontré con Segun.
             {
-                $data[$counter][0] = trim($data[$counter][0], "\t");
+                $data[$counter][0] = trim($data[$counter][0], "\t"); // Hago un trim de tabulación al contenido de $data[$counter][0] que es el nombre del comando, Segun en este caso.
             }
         }
-        $counter++;
+        $counter++; // Incremento $counter.
     }
     fclose($handle); // Al Terminar de Leer el Archivo, Cierra la Lectura del Archivo.
 
-    for ($i = 1; $i < count($command); $i++)
+    for ($i = 0; $i < count($command); $i++) // Hago un bucle al tamaño del array $command.
     {
-        switch ($command[$i][0])
+        switch ($command[$i]) // Hago el swutch al comando que está en $command.
         {
-            case "Escribir":
-                if ($i > 1 && count($data[$i - 2]) > 2 && $data[$i - 2][0] == "Segun")
+            case "Algoritmo":
+                echo "<h1>Bienvenido a la Aplicación: " . $data[$i][1] . "</h1>";
+                break;
+            case "Escribir": // Si el comando es Escribir.
+                $write = new Escribir(); // Asigno a $write una nueva instancia de la clase Escribir.
+                $write->set_text($data[$i][1]); // Y envío el texto a escribir en pantalla en un h3 a la clase, a través de la función set_text()).
+                break; // Sale del switch.
+            case "Leer": // Si el comando es Leer.
+                $read = new Leer(); // Asigno a $read una nueva instancia de la clase Leer.
+                $read->set_input($data[$i][1]); // Llamo a la función set_input($name) para poner los input en la pantalla, le paso el nombre de la variable.
+                break; // Sale del switch.
+            case "Segun": // Si el comando es Segun.
+                $j = $i; // Igualo $j a $i.
+                $z = 0; // Asigno 0 a $z;
+                $sign = []; // Creo el arrat $sign.
+                while ($z < 4) // Mientrs $z sea menor que 4.
                 {
-                    $data[$i - 1] = explode('"', $data[$i - 1][0]);
-                    $sign[$j] = $data[$i - 1][1];
-                    $j++;
-                    $command[$i + 1][0] = "Segun";
+                    $j++; // Incremento $j, para acceder a la primera opción del Segun.
+                    $data[$j] = explode('"', $data[$j][0]); // Exploto en $data[$j] el contenido de $data[$j][0] por las comillas("), contiene las operaciones matemáticas.
+                    $sign[$z] = $data[$j][1]; // Asigo a $sign[$z] el contenido del array $data[$j][1], los signos(+, -, *, /).
+                    $j++; // Incremento $j, paso a la siguiente línea que es el Escribir, al incrementar $j otra vez en la linea 66 pasa a la segunda opción de Segun y así sucesivamente.
+                    $z++; // Incremento $z, hasta que llegue a 4.
+                }
+                $switch = new Segun(); // UNa vez carado todo el contenido del Segun, Creo una nueva instancia de la clase Segun.
+                $switch->set_sign($sign); // Llamo a la función set_sign($sign) y le paso el array $sign.
+                $i = $j; // Igualo $i a $j, para continuar a partir de fuera del bloque Segun.
+                break; // Sale del switch.
+            case "Hacer": // Proximamente
                     break;
-                }
-                else
-                {
-                    $write = new Escribir();
-                    $write->set_text($data[$i][1]);
-                }
+            case "De": // Proximamente
                 break;
-            case "Leer":
-                $read = new Leer();
-                $read->set_var($data[$i][1]);
+            case "Otro": // Proximamente
                 break;
-            case "Segun":
-                $j = $i;
-                $z = 0;
-                $sign = [];
-                while ($z < 4)
-                {
-                    $j++;
-                    $data[$j] = explode('"', $data[$j][0]);
-                    $sign[$z] = $data[$j][1];
-                    $j++;
-                    $z++;
-                }
-                $switch = new Segun();
-                $switch->set_sign($sign);
-                $i = $j;
+            case "Modo": // Proximamente
                 break;
-            case "Hacer":
-                    break;
-            case "De":
+            case "Fin": // Proximamente
                 break;
-            case "Otro":
+            case "Si": // Proximamente
                 break;
-            case "Modo":
-                break;
-            case "Fin":
-                break;
-            case "Segun":
-                break;
-            case "FinAlgoritmo":
-                break;
+            case "FinAlgoritmo": // Si encuentro el comando FinAlgoritmo.
+                $i = count($command); // Igualo $i al total del array $command.
+                break; // Sale del switch.
             default:
                 echo "Ese Comando Aun No Está Implementado.";
-                echo $command[$i][0];
+                echo $command[$i];
         }
     }
     echo '<br><br><input type="button" value="Calcula el Resultado" onclick="calculate()">
     <br><br>
-    <h3 id="result"></h3>';
+    <h3 id="result"></h3>'; // Al salir pone el botón que llama a la función de javascript calculate() y escribe el resultado en el h3 con id result.
 }
 ?>
 </body>
