@@ -8,53 +8,41 @@
     <script src="js/script.js"></script>
 </head>
 <body>
-    
-</body>
-</html>
 <?php
-include "write.php";
-include "read.php";
-include "switch.php";
-$handle = fopen("Hola.psc", "r");
-if ($handle)
+include "write.php"; // Incluye la clase Write, cuando encuentra un Escribir en Pseint.
+include "read.php"; // Incluye la clase Read, cuando encuentra un Leer en Pseint.
+include "switch.php"; // Incluye la clase Switch, cuando encuentra un Segun en Pseint.
+$handle = fopen("Hola.psc", "r"); // Prepara el archivo Hola.psc(source de Pseint) para leerlo.
+if ($handle) // Si el archivo existe.
 {
-    $command = [];
-    $command[0] = NULL;
-    $data = [];
-    $data[0] = NULL;
-    $result = [];
-    $result[0] = NULL;
-    $counter = 0;
-    while (($line = fgets($handle)) !== false)
+    $command = []; // Creo el array $command que contendrá los comandos de Pseint(Escribir, Leer, Segun, etc.).
+    $data = []; // Creo el array $data que contendrá los datos, después de los comandos de Pseint(Nombres de Variables, Texto a Mostrar, Operaciones, etc.).
+    $counter = 0; // Creo $counter para contar la cantidad de comandos de Pseint.
+    while (($line = fgets($handle)) !== false) // Mientras Lea Líneas del Archivo.
     {
-        if ($counter >= 1)
+        $command[$counter] = []; // Hago a $command un array bidimensional.
+        $data[$counter] = []; // Hago a $data un array bidimensional.
+        $command[$counter] = explode(" ", $line);
+        $command[$counter][0] =  trim($command[$counter][0], "\t");
+        if ($command[$counter][0] == "Escribir")
         {
-            $command[$counter] = [];
-            $data[$counter] = [];
-            $command[$counter] = explode(" ", $line);
-            $command[$counter][0] =  trim($command[$counter][0], "\t");
-            if ($command[$counter][0] == "Escribir")
+            $data[$counter] = explode('"', $line);
+        }
+        else
+        {
+            $data[$counter] = explode(" ", $line);
+            if (count($data[$counter]) > 1)
             {
-                $data[$counter] = explode('"', $line);
-                $result[$counter] = explode(",", $line);
-                $result[$counter][0] = trim($result[$counter][0], " ");
+                $data[$counter][1] = trim($data[$counter][1], ";\r\n");
             }
-            else
+            if (count($data[$counter]) > 2)
             {
-                $data[$counter] = explode(" ", $line);
-                if (count($data[$counter]) > 1)
-                {
-                    $data[$counter][1] = trim($data[$counter][1], ";\r\n");
-                }
-                if (count($data[$counter]) > 2)
-                {
-                    $data[$counter][0] = trim($data[$counter][0], "\t");
-                }
+                $data[$counter][0] = trim($data[$counter][0], "\t");
             }
         }
         $counter++;
     }
-    fclose($handle);
+    fclose($handle); // Al Terminar de Leer el Archivo, Cierra la Lectura del Archivo.
 
     for ($i = 1; $i < count($command); $i++)
     {
@@ -73,13 +61,6 @@ if ($handle)
                 {
                     $write = new Escribir();
                     $write->set_text($data[$i][1]);
-                    if (count($result[$i]) > 1)
-                    {
-                        $result[$i] = explode(" ", $result[$i][1]);
-                        echo '<input type="button" value="Calcula el Resultado" onclick="calculate()">
-                        <br><br>
-                        <h3 id="result"></h3>';
-                    }
                 }
                 break;
             case "Leer":
@@ -126,3 +107,5 @@ if ($handle)
     <h3 id="result"></h3>';
 }
 ?>
+</body>
+</html>
