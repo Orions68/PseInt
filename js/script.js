@@ -7,7 +7,7 @@ function calculate() // Función calculate, la llama el botón Calcula el Result
     
     if (input2.value == 0 && select.value == "/")
     {
-        result.innerHTML = "El Segundo Número no Puede Ser 0, Por Favor Cambia de Operación o Cambia el Número.";
+        result.innerHTML = "Si Quieres Dividir el Segundo Número no Puede Ser 0, Por Favor Cambia de Operación o Cambia el Número.";
     }
     else
     {

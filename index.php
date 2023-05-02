@@ -73,9 +73,9 @@ if ($handle) // Si el archivo existe.
                     $j++; // Incremento $j, paso a la siguiente línea que es el Escribir, al incrementar $j otra vez en la linea 66 pasa a la segunda opción de Segun y así sucesivamente.
                     $z++; // Incremento $z, hasta que llegue a 4.
                 }
-                $switch = new Segun(); // UNa vez carado todo el contenido del Segun, Creo una nueva instancia de la clase Segun.
+                $switch = new Segun(); // Una vez cargado todo el contenido del Segun, Creo una nueva instancia de la clase Segun.
                 $switch->set_sign($sign); // Llamo a la función set_sign($sign) y le paso el array $sign.
-                $i = $j - 1; // Igualo $i a $j - 1, para continuar a partir de la última opción(/) del bloque Segun.
+                $i = $j - 1; // Igualo $i a $j - 1, para continuar a partir de después de la última opción(/) del bloque Segun.
                 break; // Sale del switch.
             case "Hacer": // Proximamente.
                     break;
@@ -87,12 +87,12 @@ if ($handle) // Si el archivo existe.
                 break;
             case "Fin": // Proximamente.
                 break;
-            case "Si": // Proximamente.
+            case "Si": // Cuando Encuentra el Si, sale del bucle for.
                 $i = count($command);
                 break;
             case "FinAlgoritmo": // Si encuentro el comando FinAlgoritmo.
                 $i = count($command); // Igualo $i al total del array $command.
-                break; // Sale del switch.
+                break; // Sale del bucle for.
             default:
                 echo "Ese Comando Aun No Está Implementado.";
                 echo $command[$i];
