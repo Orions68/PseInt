@@ -13,6 +13,10 @@ Algoritmo Calculadora
 		"*":
 			Escribir "El resultado de la Multiplicación es: ", num1 * num2;
 		"/":
+        Si num2 = 0 Entonces
+            Escribir "No se Puede Dividir por 0, Por Favor Ingresa Orto Segundo Número que no sea 0.";
+            Leer num2;
+        FinSi
 			Escribir "El resultado de la División es: ", num1 / num2;
 	Fin Segun
 FinAlgoritmo

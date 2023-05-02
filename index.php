@@ -12,6 +12,7 @@
 include "write.php"; // Incluye la clase Write, cuando encuentra un Escribir en Pseint.
 include "read.php"; // Incluye la clase Read, cuando encuentra un Leer en Pseint.
 include "switch.php"; // Incluye la clase Switch, cuando encuentra un Segun en Pseint.
+$ok = true;
 $handle = fopen("Hola.psc", "r"); // Prepara el archivo Hola.psc(source de Pseint) para leerlo.
 if ($handle) // Si el archivo existe.
 {
@@ -23,6 +24,7 @@ if ($handle) // Si el archivo existe.
         $data[$counter] = []; // Hago a $data un array bidimensional.
         $command[$counter] = strtok($line, " "); // Obtengo la primera palabra antes del espacio( ) en el array $command[$counter] de la primera línea que leo del archivo de Pseint.
         $command[$counter] =  trim($command[$counter], "\t"); // Hago un trim de las tabulaciones.
+        // $command[$counter] = preg_replace('/(\s\s+|\t|\n)/', '', $command[$counter]); // Reemplaza todos los caracteres espacio, tab, salto de linea por '' en la cadena.
 
         if ($command[$counter] == "Escribir") // Verifico si el comando es Escribir.
         {
@@ -35,9 +37,9 @@ if ($handle) // Si el archivo existe.
             {
                 $data[$counter][1] = trim($data[$counter][1], ";\r\n"); // Entonces hago un trim al contenido de $data[$counter][1] que es el nombre de la variable a ingresar.
             }
-            if (count($data[$counter]) == 3) // Si el tamaño de $data[$counter] es 3, me encontré con Segun.
+            if (count($data[$counter]) == 3 || count($data[$counter]) == 5) // Si el tamaño de $data[$counter] es 3 ó 5, me encontré con Segun o un Si.
             {
-                $data[$counter][0] = trim($data[$counter][0], "\t"); // Hago un trim de tabulación al contenido de $data[$counter][0] que es el nombre del comando, Segun en este caso.
+                $data[$counter][0] = trim($data[$counter][0], "\t"); // Hago un trim de tabulación al contenido de $data[$counter][0] que es el nombre del comando, Segun o Si en este caso.
             }
         }
         $counter++; // Incremento $counter.
@@ -46,7 +48,7 @@ if ($handle) // Si el archivo existe.
 
     for ($i = 0; $i < count($command); $i++) // Hago un bucle al tamaño del array $command.
     {
-        switch ($command[$i]) // Hago el swutch al comando que está en $command.
+        switch ($command[$i]) // Hago el switch al comando que está en $command.
         {
             case "Algoritmo":
                 echo "<h1>Bienvenido a la Aplicación: " . $data[$i][1] . "</h1>";
@@ -63,7 +65,7 @@ if ($handle) // Si el archivo existe.
                 $j = $i; // Igualo $j a $i.
                 $z = 0; // Asigno 0 a $z;
                 $sign = []; // Creo el arrat $sign.
-                while ($z < 4) // Mientrs $z sea menor que 4.
+                while ($z < 4) // Mientras $z sea menor que 4.
                 {
                     $j++; // Incremento $j, para acceder a la primera opción del Segun.
                     $data[$j] = explode('"', $data[$j][0]); // Exploto en $data[$j] el contenido de $data[$j][0] por las comillas("), contiene las operaciones matemáticas.
@@ -73,19 +75,20 @@ if ($handle) // Si el archivo existe.
                 }
                 $switch = new Segun(); // UNa vez carado todo el contenido del Segun, Creo una nueva instancia de la clase Segun.
                 $switch->set_sign($sign); // Llamo a la función set_sign($sign) y le paso el array $sign.
-                $i = $j; // Igualo $i a $j, para continuar a partir de fuera del bloque Segun.
+                $i = $j - 1; // Igualo $i a $j - 1, para continuar a partir de la última opción(/) del bloque Segun.
                 break; // Sale del switch.
-            case "Hacer": // Proximamente
+            case "Hacer": // Proximamente.
                     break;
-            case "De": // Proximamente
+            case "De": // Proximamente.
                 break;
-            case "Otro": // Proximamente
+            case "Otro": // Proximamente.
                 break;
-            case "Modo": // Proximamente
+            case "Modo": // Proximamente.
                 break;
-            case "Fin": // Proximamente
+            case "Fin": // Proximamente.
                 break;
-            case "Si": // Proximamente
+            case "Si": // Proximamente.
+                $i = count($command);
                 break;
             case "FinAlgoritmo": // Si encuentro el comando FinAlgoritmo.
                 $i = count($command); // Igualo $i al total del array $command.
@@ -96,8 +99,8 @@ if ($handle) // Si el archivo existe.
         }
     }
     echo '<br><br><input type="button" value="Calcula el Resultado" onclick="calculate()">
-    <br><br>
-    <h3 id="result"></h3>'; // Al salir pone el botón que llama a la función de javascript calculate() y escribe el resultado en el h3 con id result.
+        <br><br>
+        <h3 id="result"></h3>'; // Al salir pone el botón que llama a la función de javascript calculate() y escribe el resultado en el h3 con id result.
 }
 ?>
 </body>
