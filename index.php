@@ -64,7 +64,7 @@ if ($handle) // Si el archivo existe.
             case "Segun": // Si el comando es Segun.
                 $j = $i; // Igualo $j a $i.
                 $z = 0; // Asigno 0 a $z;
-                $sign = []; // Creo el arrat $sign.
+                $sign = []; // Creo el array $sign.
                 while ($z < 4) // Mientras $z sea menor que 4.
                 {
                     $j++; // Incremento $j, para acceder a la primera opción del Segun.
